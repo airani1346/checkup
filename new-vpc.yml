@@ -1,26 +1,125 @@
 ---
-- name: Build an inventory
-  hosts: localhost
-  connection: local
-  gather_facts: no
-  tasks:
-    - name: Create a dynamic inventory
-      add_host:
-        hostname: "{{ lookup('env','VAR_mgmt_hostname') }}"
-        ansible_host: "{{ lookup('env','VAR_mgmt_IP') }}"
-        # Credentials for cp_mgmt* modules and Settings for the Check Point httpapi plugin that provides methods to connect to Checkpoint devices over a HTTP(S)-based api.
-        ansible_httpapi_use_ssl: True
-        ansible_httpapi_validate_certs: False
-        ansible_network_os: check_point.mgmt.checkpoint
-        ansible_checkpoint_domain: SMC User
-        #ansible_user: "{{ lookup('env','VAR_mgmt_api_user') }}"
-        #ansible_ssh_pass: "{{ lookup('env','VAR_mgmt_api_password') }}"
-        ansible_api_key: "{{ lookup('env','VAR_mgmt_api_key') }}"
-        groups: Check_Point
+# ###################
+# Create VPC
+# ###################
+- name: create VPC
+  ec2_vpc_net:
+    name: "{{ vpc_name }}"
+    cidr_block: "{{ vpc_cidr }}"
+    region: "{{ region }}"
+    state: present
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+  register: vpc
+  
+- name: Set VPC ID in variable
+  set_fact: 
+    vpc_id: "{{ vpc.vpc.id }}"
 
-- name:  Configure the Check Point security policy and Security gateways
-  hosts: "{{ lookup('env','VAR_mgmt_hostname') }}"
-  connection: httpapi
-  gather_facts: no
-  roles:
-    - role: roles/chkp_sec_policy
+- name: associate subnet to the VPC
+  ec2_vpc_subnet:
+    state: present
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    cidr: "{{ subnet_cidr }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    map_public: yes
+    resource_tags:
+      Name: "{{ subnet_name }}"
+    register: subnet
+ 
+# ###################
+# Creating a subnet and associating it with an Internet Gateway
+# ###################
+- name: create IGW
+  ec2_vpc_igw:
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    state: "present"
+    tags:
+      Name: "{{ igw_name }}"
+    register: igw
+
+# ###################
+# Create Routing 
+# ###################
+- name: Route IGW
+  ec2_vpc_route_table:
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    subnets:
+      - "{{ subnet.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ igw.gateway_id  }}"
+    tags:
+      Name: "{{ route_name }}"
+
+# ###################################################
+# update the CIDR address in the SSH port section.
+# ###################################################
+- name: Create Security Group
+  ec2_group:
+    name: Web DMZ
+    description: DMZ Security Group
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    rules:
+      - proto: tcp
+        ports:
+        - 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        ports:
+        - 22
+        cidr_ip: 0.0.0.0/0
+    register: security_group
+
+
+# ###################################################
+# Create and copy a new key-pair  
+# ###################################################
+#- name: create a new ec2 key pair, returns generated private key
+#  ec2_key:
+#    aws_access_key: "{{ aws_access_key }}"
+#    aws_secret_key: "{{ aws_secret_key }}"
+#    name: "{{ keypair_name }}"
+#    region: "{{ region }}"
+#    register: keypair
+#  tags:
+#    - ec2_key
+#
+#- debug:
+#    var: keypair
+#    tags:
+#    - ec2_key
+#
+#- name: Copy EC2 Key Pair private key locally
+#  copy: content="{{ keypair.key.private_key }}" dest={{ ec2_key_directory }}key.ppk
+#  when: keypair.changed == true
+#  tags:
+#    - ec2_key
+
+# ###################################################
+# Create EC2 Server
+# ###################################################
+- name: Create EC2 Instance
+  ec2:
+    image: ami-467ca739
+    wait: yes
+    instance_type: t2.micro
+    region: "{{ region }}"
+    group_id: "{{ security_group.group_id }}"
+    vpc_subnet_id: "{{ subnet.subnet.id }}"
+    key_name: "{{ keypair.key.name  }}"
+    count_tag: "{{ ec2_tag }}"
+    exact_count: 1
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
