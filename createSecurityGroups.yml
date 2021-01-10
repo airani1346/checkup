@@ -1,0 +1,60 @@
+  - name: Create Honey Pot Security Group
+    ec2_group:
+      name: SGHoneyPot
+      description: DMZ Security Group
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      vpc_id: "{{ vpc_id }}"
+      region: "{{ region }}"
+      rules:
+        - rule_desc: Allow all inbound traffic
+          proto: -1
+          ports: -1
+          cidr_ip: "{{ destinationCidrBlock }}"
+    register: security_group_hp
+
+  - name: Create Gateway Security Group
+    ec2_group:
+      name: SGGateway
+      description: DMZ Security Group
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      vpc_id: "{{ vpc_id }}"
+      region: "{{ region }}"
+      rules:
+        - rule_desc: Allow all inbound traffic
+          proto: -1
+          ports: -1
+          cidr_ip: "{{ destinationCidrBlock }}"
+    register: security_group_Gateway
+
+  - name: Create Management Security Group
+    ec2_group:
+      name: SGManagenet
+      description: DMZ Security Group
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      vpc_id: "{{ vpc_id }}"
+      region: "{{ region }}"
+      rules:
+        - rule_desc: Allow all from vpc 
+          proto: -1
+          ports: -1
+          cidr_ip: "{{ vpc_cidr }}"
+        - rule_desc: Allow ssh
+          proto: tcp
+          ports: 22
+          cidr_ip: "{{ destinationCidrBlock }}"
+        - rule_desc: Allow https
+          proto: tcp
+          ports: 443
+          cidr_ip: "{{ destinationCidrBlock }}"
+        - rule_desc: Allow 18190
+          proto: tcp
+          ports: 18190
+          cidr_ip: "{{ destinationCidrBlock }}"
+        - rule_desc: Allow 19009
+          proto: tcp
+          ports: 19009
+          cidr_ip: "{{ destinationCidrBlock }}"
+    register: security_group_mgmt
