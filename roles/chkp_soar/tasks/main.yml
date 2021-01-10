@@ -1,4 +1,0 @@
----
-# tasks file for chkp_deploy_software_package role
-- include_tasks: cp_mgmt_show_logs.yml
-- include_tasks: quarantine_attacker.yml
