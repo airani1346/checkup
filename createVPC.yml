@@ -1,0 +1,24 @@
+---
+- hosts: localhost  # put localhost.  We are processing against aws
+  connection: local  # put local.  We are processing against aws
+  gather_facts: False  # don't gather facts against localhost
+  tasks:
+  - name: create a new ec2 VPC
+    # create a vpc with name, cidr block,dns support, and tenancy
+    ec2_vpc_net:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      name: "{{ vpc_name }}" 
+      cidr_block: "{{ vpc_cidr }}"
+      region: "{{ region }}"
+      # enable dns support 
+      dns_support: yes
+      # enable dns hostnames
+      dns_hostnames: yes
+      tenancy: default
+      state: "{{ state }}"
+    register: vpc
+    
+  - name: Set VPC ID in variable
+    set_fact: 
+      vpc_id: "{{ vpc.vpc.id }}"
