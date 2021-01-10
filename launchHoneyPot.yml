@@ -3,6 +3,21 @@
   connection: local  # put local.  We are processing against aws
   gather_facts: False  # don't gather facts against localhost
   tasks:
+  - name: Get AMI Image ID for HoneyPot
+    ec2_ami_info:
+      region: "{{ region }}"
+      filters:
+        name: "Debian 10 (Buster) LAMP Stack - Linux Apache MySQL/MariaDB PHP 7.2-9*"
+    register: amis_hp
+
+  - name:  print Mgmt ami id
+    vars:
+      hp_ami: >
+        {{ amis_hp.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+    debug:
+      msg: "{{hp_ami.image_id}}"
+    register: hp_ami
+    
   - name: launche honeyPot
     ec2:
       region: "{{ region }}"
