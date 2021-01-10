@@ -1,7 +1,5 @@
   - name: launche honeyPot
     ec2:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       image: "{{ hp_ami.msg }}"
       instance_type: "{{ hp_hw }}"
