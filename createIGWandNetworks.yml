@@ -39,8 +39,13 @@
       map_public: yes
       resource_tags:
         Name: "{{ subnet_name1 }}"
-    register: subnet1
+    register: sn1
 
+  - name: Set subnet1 in variable
+    set_stats:
+      data:
+        subnet1: "{{ sn1 }}"
+        
   - name: associate subnet2 to the VPC
     ec2_vpc_subnet:
       region: "{{ region }}"
@@ -50,7 +55,12 @@
       map_public: yes
       resource_tags:
         Name: "{{ subnet_name2 }}"
-    register: subnet2
+    register: sn2
+
+  - name: Set subnet2 in variable
+    set_stats:
+      data:
+        subnet2: "{{ sn2 }}"
 
   - name: associate subnet3 to the VPC
     ec2_vpc_subnet:
@@ -61,8 +71,13 @@
       map_public: yes
       resource_tags:
         Name: "{{ subnet_name3 }}"
-    register: subnet3
-    
+    register: sn3
+  
+  - name: Set subnet3 in variable
+    set_stats:
+      data:
+        subnet3: "{{ sn3 }}"
+
   - name: define route for subnet 2
     ec2_vpc_route_table:
       region: "{{ region }}"
