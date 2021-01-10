@@ -1,7 +1,5 @@
   - name: Create new ENI Interface for Gateway External Network
     ec2_eni:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       security_groups: "{{ security_group_Gateway.group_id }}"
       private_ip_address: "{{ gateway_net1_ip }}" 
@@ -11,8 +9,6 @@
 
   - name: Create new ENI Interface for Gateway Internal Network
     ec2_eni:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       security_groups: "{{ security_group_Gateway.group_id }}"
       private_ip_address: "{{ gateway_net2_ip }}" 
@@ -22,8 +18,6 @@
  
   - name: launche Gateway
     ec2:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       image: "{{ gateway_ami.msg }}"
       instance_type: "{{ gateway_hw }}"
@@ -37,8 +31,6 @@
 
   - name: associate a new elastic IP to external Gateway Interface
     ec2_eip:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       in_vpc: yes
       release_on_disassociation: true
@@ -46,27 +38,14 @@
       device_id: "{{ External_ENI.interface.id }}"
     register: eip
 
-#  - name: Associate elastic IP with external Interface of Gateway and Termination Flag
-#    ec2_eip:
-#      aws_access_key: "{{ aws_access_key }}"
-#      aws_secret_key: "{{ aws_secret_key }}"
-#      region: "{{ region }}"
-#      
-#      in_vpc: yes
-#      ip: "{{ eip.public_ip }}"
-
   - name: edit ENI Interface for Gateway External Network
     ec2_eni:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       eni_id: "{{External_ENI.interface.id}}"
       delete_on_termination: yes
 
   - name: edit ENI Interface for Gateway Internal Network
     ec2_eni:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       eni_id: "{{Internal_ENI.interface.id}}"
       delete_on_termination: yes
