@@ -2,8 +2,6 @@
     ec2_group:
       name: SGHoneyPot
       description: DMZ Security Group
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       vpc_id: "{{ vpc_id }}"
       region: "{{ region }}"
       rules:
@@ -17,8 +15,6 @@
     ec2_group:
       name: SGGateway
       description: DMZ Security Group
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       vpc_id: "{{ vpc_id }}"
       region: "{{ region }}"
       rules:
@@ -32,8 +28,6 @@
     ec2_group:
       name: SGManagenet
       description: DMZ Security Group
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       vpc_id: "{{ vpc_id }}"
       region: "{{ region }}"
       rules:
