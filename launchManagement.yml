@@ -1,0 +1,17 @@
+  - name: launche Management
+    ec2:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      region: "{{ region }}"
+      image: "{{ mgmt_ami.msg }}"
+      instance_type: "{{ mgmt_hw }}"
+      private_ip: "{{ mgmt_net1_ip }}"
+      wait: no
+      group_id: "{{ security_group_mgmt.group_id }}"
+      vpc_subnet_id: "{{ subnet1.subnet.id }}"
+      key_name: "{{ keypairName  }}"
+      assign_public_ip: True
+      instance_tags: 
+        Name: CP_Management{{ cp_version }}
+      user_data: "{{ mgmt_user_data }}"
+    register: MgmtInstance 
