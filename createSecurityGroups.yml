@@ -1,3 +1,5 @@
+---
+  tasks:  
   - name: Create Honey Pot Security Group
     ec2_group:
       name: SGHoneyPot
