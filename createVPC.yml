@@ -6,8 +6,6 @@
   - name: create a new ec2 VPC
     # create a vpc with name, cidr block,dns support, and tenancy
     ec2_vpc_net:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       name: "{{ vpc_name }}" 
       cidr_block: "{{ vpc_cidr }}"
       region: "{{ region }}"
