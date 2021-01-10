@@ -1,7 +1,5 @@
   - name: Get AMI Image ID for Gateway
     ec2_ami_info:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       filters:
         name: "Check Point*IaaS GW BYOL*{{ cp_version }}*"
@@ -17,8 +15,6 @@
 
   - name: Get AMI Image ID for Management 
     ec2_ami_info:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       filters:
         name: "Check Point*IaaS BYOL*{{ cp_version }}*"
@@ -34,8 +30,6 @@
     
   - name: Get AMI Image ID for HoneyPot
     ec2_ami_info:
-      aws_access_key: "{{ aws_access_key }}"
-      aws_secret_key: "{{ aws_secret_key }}"
       region: "{{ region }}"
       filters:
         name: "Debian 10 (Buster) LAMP Stack - Linux Apache MySQL/MariaDB PHP 7.2-9*"
