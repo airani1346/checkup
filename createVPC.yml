@@ -18,5 +18,6 @@
     register: vpc
     
   - name: Set VPC ID in variable
-    set_fact: 
-      vpc_id: "{{ vpc.vpc.id }}"
+    set_stats:
+      data:
+        vpc_id: "{{ vpc.vpc.id }}"
