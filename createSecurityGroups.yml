@@ -14,8 +14,13 @@
           proto: -1
           ports: -1
           cidr_ip: "{{ destinationCidrBlock }}"
-    register: security_group_hp
+    register: SGHP
 
+  - name: Set HP SG ID in variable
+    set_stats:
+      data:
+        security_group_hp: "{{ SGHP }}"
+        
   - name: Create Gateway Security Group
     ec2_group:
       name: SGGateway
@@ -27,7 +32,12 @@
           proto: -1
           ports: -1
           cidr_ip: "{{ destinationCidrBlock }}"
-    register: security_group_Gateway
+    register: SGGW
+
+  - name: Set Gateway SG ID in variable
+    set_stats:
+      data:
+        security_group_Gateway: "{{ SGGW }}"
 
   - name: Create Management Security Group
     ec2_group:
@@ -56,4 +66,9 @@
           proto: tcp
           ports: 19009
           cidr_ip: "{{ destinationCidrBlock }}"
-    register: security_group_mgmt
+    register: SGMGMT
+
+  - name: Set MgMT SG ID in variable
+    set_stats:
+      data:
+        security_group_mgmt: "{{ SGMGMT }}"
