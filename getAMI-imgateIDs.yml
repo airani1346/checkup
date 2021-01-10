@@ -3,21 +3,6 @@
   connection: local  # put local.  We are processing against aws
   gather_facts: False  # don't gather facts against localhost
   tasks:
-  - name: Get AMI Image ID for Gateway
-    ec2_ami_info:
-      region: "{{ region }}"
-      filters:
-        name: "Check Point*IaaS GW BYOL*{{ cp_version }}*"
-    register: amis
-
-  - name:  print Gateway ami id
-    vars:
-      gateway_ami: >
-        {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
-    debug:
-      msg: "{{gateway_ami.image_id}}"
-    register: gateway_ami
-
   - name: Get AMI Image ID for Management 
     ec2_ami_info:
       region: "{{ region }}"
