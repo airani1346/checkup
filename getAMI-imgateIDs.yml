@@ -1,0 +1,54 @@
+  - name: Get AMI Image ID for Gateway
+    ec2_ami_info:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      region: "{{ region }}"
+      filters:
+        name: "Check Point*IaaS GW BYOL*{{ cp_version }}*"
+    register: amis
+
+  - name:  print Gateway ami id
+    vars:
+      gateway_ami: >
+        {{ amis.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+    debug:
+      msg: "{{gateway_ami.image_id}}"
+    register: gateway_ami
+
+  - name: Get AMI Image ID for Management 
+    ec2_ami_info:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      region: "{{ region }}"
+      filters:
+        name: "Check Point*IaaS BYOL*{{ cp_version }}*"
+    register: amis_mgmt
+
+  - name:  print Mgmt ami id
+    vars:
+      mgmt_ami: >
+        {{ amis_mgmt.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+    debug:
+      msg: "{{mgmt_ami.image_id}}"
+    register: mgmt_ami
+    
+  - name: Get AMI Image ID for HoneyPot
+    ec2_ami_info:
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      region: "{{ region }}"
+      filters:
+        name: "Debian 10 (Buster) LAMP Stack - Linux Apache MySQL/MariaDB PHP 7.2-9*"
+    register: amis_hp
+
+  - name:  print Mgmt ami id
+    vars:
+      hp_ami: >
+        {{ amis_hp.images | selectattr('name', 'defined') | sort(attribute='creation_date') | last }}
+    debug:
+      msg: "{{hp_ami.image_id}}"
+    register: hp_ami
+
+  - name: display Management Server AMI ID
+    debug: 
+      msg: "{{mgmt_ami.msg}}"
