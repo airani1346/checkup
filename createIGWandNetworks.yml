@@ -96,7 +96,12 @@
         - "{{ subnet_cidr3 }}"
       tags:
         Name: "{{ route_name }} HP"
-    register: route3
+    register: rout3
+
+  - name: Set route3 in variable
+    set_stats:
+      data:
+        route3: "{{ rout3 }}"
 
   - name: Create Honey Pot Security Group
     ec2_group:
