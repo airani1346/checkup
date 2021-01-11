@@ -70,11 +70,11 @@
       eni_id: "{{Internal_ENI.interface.id}}"
       delete_on_termination: yes
       
- - name: set default Route of HP Network to internal Gateway Interface
-   ec2_vpc_route_table:
-     region: "{{ region }}"
-     vpc_id: "{{ vpc_id }}"
-     route_table_id: "{{ route3.id }}"
-     routes:
-       - dest: 0.0.0.0/0
-         network_interface_id: "{{Internal_ENI.interface.id}}"
+  - name: set default Route of HP Network to internal Gateway Interface
+    ec2_vpc_route_table:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc_id }}"
+      route_table_id: "{{ route3.id }}"
+      routes:
+        - dest: 0.0.0.0/0
+          network_interface_id: "{{Internal_ENI.interface.id}}"
