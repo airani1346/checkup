@@ -11,8 +11,10 @@ AWX Server</br>
 
 
 <b>Usage</b></br>
-create a AWX Woprkflow </br></br>
+create a AWX Workflow </br></br>
+
 define survey Variables in your Workflow</br>
+
 cp_version , Type text, Default R81</br>
 vpc_title, Type text, Default CloudCheckup</br>
 vpc_name, Type text, Default CloudCheckupVPC</br>
