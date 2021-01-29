@@ -73,7 +73,7 @@
        
   - debug: interface id
       msg: "{{item}}"
-    with_items: "{{ Internal_ENI.interface.id }}2
+    with_items: "{{ Internal_ENI.interface.id }}"
     
   - debug: subnetID
       msg: "{{item}}"
