@@ -74,16 +74,16 @@
   - debug: interface id
       msg: "{{Internal_ENI.interface.id}}"
     
-  - debug: route3
+  - debug: subnetID
       msg: "{{item}}"
-    with_items: "{{route3}}"
+    with_items: "{{ subnet3.subnet.id }}"
   
   - name: set default Route of HP Network to internal Gateway Interface
     ec2_vpc_route_table:
       region: "{{ region }}"
       vpc_id: "{{ vpc_id }}"
-      route_table_id: "{{ route3.id }}"
-      lookup: id
+      subnets:
+        - "{{ subnet3.subnet.id }}"
       routes:
         - dest: 0.0.0.0/0
           network_interface_id: "{{Internal_ENI.interface.id}}"
