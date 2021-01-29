@@ -69,16 +69,7 @@
       region: "{{ region }}"
       eni_id: "{{Internal_ENI.interface.id}}"
       delete_on_termination: yes
-      
-       
-  - debug: interface id
-      msg: "{{item}}"
-    with_items: "{{ Internal_ENI.interface.id }}"
-    
-  - debug: subnetID
-      msg: "{{item}}"
-    with_items: "{{ subnet3.subnet.id }}"
-  
+        
   - name: set default Route of HP Network to internal Gateway Interface
     ec2_vpc_route_table:
       region: "{{ region }}"
