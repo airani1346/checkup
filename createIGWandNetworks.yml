@@ -62,22 +62,6 @@
       data:
         subnet2: "{{ sn2 }}"
 
-  - name: associate subnet3 to the VPC
-    ec2_vpc_subnet:
-      region: "{{ region }}"
-      vpc_id: "{{ vpc_id }}"
-      state: "{{ state }}"
-      cidr: "{{ subnet_cidr3 }}"
-      map_public: yes
-      resource_tags:
-        Name: "{{ subnet_name3 }}"
-    register: sn3
-  
-  - name: Set subnet3 in variable
-    set_stats:
-      data:
-        subnet3: "{{ sn3 }}"
-
   - name: define route for subnet 2
     ec2_vpc_route_table:
       region: "{{ region }}"
@@ -87,31 +71,3 @@
       tags:
         Name: "{{ route_name }}"
     register: route2
-
-  - name: define route for subnet 3
-    ec2_vpc_route_table:
-      region: "{{ region }}"
-      vpc_id: "{{ vpc_id }}"
-      subnets:
-        - "{{ subnet_cidr3 }}"
-      tags:
-        Name: "{{ route_name }} HP"
-    register: rout3
-
-  - name: Set route3 in variable
-    set_stats:
-      data:
-        route3: "{{ rout3 }}"
-
-  - name: Create Honey Pot Security Group
-    ec2_group:
-      name: SGHoneyPot
-      description: DMZ Security Group
-      vpc_id: "{{ vpc_id }}"
-      region: "{{ region }}"
-      rules:
-        - rule_desc: Allow all inbound traffic
-          proto: -1
-          ports: -1
-          cidr_ip: "{{ destinationCidrBlock }}"
-    register: security_group_hp
