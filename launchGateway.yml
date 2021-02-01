@@ -21,7 +21,7 @@
   - name: Create new ENI Interface for Gateway External Network
     ec2_eni:
       region: "{{ region }}"
-      security_groups: "{{ security_group_Gateway.group_id }}"
+      security_groups: "{{ security_group_default.group_id }}"
       private_ip_address: "{{ gateway_net1_ip }}" 
       subnet_id: "{{ subnet1.subnet.id }}" 
       source_dest_check: no
@@ -30,7 +30,7 @@
   - name: Create new ENI Interface for Gateway Internal Network
     ec2_eni:
       region: "{{ region }}"
-      security_groups: "{{ security_group_Gateway.group_id }}"
+      security_groups: "{{ security_group_default.group_id }}"
       private_ip_address: "{{ gateway_net2_ip }}" 
       subnet_id: "{{ subnet2.subnet.id }}" 
       source_dest_check: no
