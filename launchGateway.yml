@@ -75,7 +75,7 @@
       region: "{{ region }}"
       vpc_id: "{{ vpc_id }}"
       subnets:
-        - "{{ subnet3.subnet.id }}"
+        - "{{ subnet2.subnet.id }}"
       routes:
         - dest: 0.0.0.0/0
           network_interface_id: "{{Internal_ENI.interface.id}}"
