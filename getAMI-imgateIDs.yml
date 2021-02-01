@@ -1,6 +1,0 @@
----
-- hosts: localhost  # put localhost.  We are processing against aws
-  connection: local  # put local.  We are processing against aws
-  gather_facts: False  # don't gather facts against localhost
-  tasks:    
-
