@@ -21,24 +21,6 @@
     set_stats:
       data:
         security_group_default: "{{ defaultSG }}"
-        
-  - name: Create Gateway Security Group
-    ec2_group:
-      name: SGGateway
-      description: DMZ Security Group
-      vpc_id: "{{ vpc_id }}"
-      region: "{{ region }}"
-      rules:
-        - rule_desc: Allow all inbound traffic
-          proto: -1
-          ports: -1
-          cidr_ip: "{{ destinationCidrBlock }}"
-    register: SGGW
-
-  - name: Set Gateway SG ID in variable
-    set_stats:
-      data:
-        security_group_Gateway: "{{ SGGW }}"
 
   - name: Create Management Security Group
     ec2_group:
