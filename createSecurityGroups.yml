@@ -12,9 +12,9 @@
     ec2_group:
       vpc_id: "{{ vpc_id }}"
       region: "{{ region }}"
-      group_id: defaultSG.group_id
+      group_id: {{defaultSG.group_id}}
       tag:
-        name: 'PublicSecurity Group'
+        name: 'PublicSecurity-Group'
         
   - name: Set Default SG ID in variable
     set_stats:
