@@ -5,8 +5,7 @@
   tasks:  
   - name: Get Default Security Group
     ec2_group_info:
-      filters:
-      vpc_id: "{{ vpc_id }}"
+      region: "{{ region }}"
     register: defaultSG
   
   - name: set  Security Group
