@@ -23,10 +23,10 @@
       region: "{{ region }}"
       image: "{{ hp_ami.msg }}"
       instance_type: "{{ hp_hw }}"
-      private_ip: "{{ hp_net3_ip }}"
+      private_ip: "{{ hp_net2_ip }}"
       wait: no
-      group_id: "{{ security_group_hp.group_id }}"
-      vpc_subnet_id: "{{ subnet3.subnet.id }}"
+      group_id: "{{ security_group_default.group_id }}"
+      vpc_subnet_id: "{{ subnet2.subnet.id }}"
       key_name: "{{ keypairName  }}"
       assign_public_ip: false
       instance_tags: 
