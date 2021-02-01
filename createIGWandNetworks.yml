@@ -3,7 +3,7 @@
   connection: local  # put local.  We are processing against aws
   gather_facts: False  # don't gather facts against localhost
   tasks:  
-  - name: create ec2 vpc internet gateway 
+  - name: create internet gateway and attach it to VPC
     ec2_vpc_igw:
       region: "{{ region }}"
       vpc_id: "{{ vpc_id }}"
@@ -19,10 +19,12 @@
         vpc-id: "{{ vpc_id }}"
     register: vpc_route_tables
 
-  - name: Setup route tables
+  - name: Setup default route tables
     ec2_vpc_route_table:
       region: "{{ region }}"
       vpc_id: "{{ vpc_id }}"
+      tags:
+        Name: PublicRT
       lookup: id
       purge_subnets: false
       route_table_id: "{{ vpc_route_tables.route_tables[0].id }}"
