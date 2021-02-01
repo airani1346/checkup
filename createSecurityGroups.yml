@@ -7,19 +7,15 @@
     ec2_group_info:
       region: "{{ region }}"
     register: defaultSG
-  
-  - name: debug default Security group
-    debug:
-      msg: "{{item}}"
-    with_items: "{{defaultSG}}"
     
   - name: set  Security Group
     ec2_group:
       vpc_id: "{{ vpc_id }}"
       region: "{{ region }}"
-      group_id: "{{defaultSG.group_id}}"
-      tag:
-        name: 'PublicSecurity-Group'
+      description: 'default'
+      name: ''
+      tags:
+        Name: 'PublicSecurity-Group'
     
   - name: Set Default SG ID in variable
     set_stats:
